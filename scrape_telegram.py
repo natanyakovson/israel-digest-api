@@ -13,22 +13,46 @@ from zoneinfo import ZoneInfo
 ISR_TZ = ZoneInfo("Asia/Jerusalem")
 
 CHANNELS_RU = [
-    'intellinews_russian', 'markkot56', 'INews_Israel',
-    'EzraMorYoutubeShow', 'voiceofisrael',
+    'intellinews_russian',
+    'markkot56',
+    'INews_Israel',
+    'EzraMorYoutubeShow',
+    'voiceofisrael',
+    'voinasordoy',
+    'isr_live',
+    'israel_truexa',
+    'Godunov2020',
+    'western_wall',
+    'polet_israel',
+    'cozy_shekel',
+    'Trueisrael'
 ]
+
 CHANNELS_HE = [
-    'GLOBAL_Telegram_MOKED', 'abualiexpress',
+    'GLOBAL_Telegram_MOKED',
+    'abualiexpress',
+    'yosephhaddad',
 ]
+
 ALL_CHANNELS = CHANNELS_RU + CHANNELS_HE
 
 DISPLAY_NAMES = {
-    'intellinews_russian': 'Intellinews',
+    'intellinews_russian': 'ИнтеллиНьюз',
     'markkot56': 'Марк Котляр',
-    'INews_Israel': 'INews Israel',
+    'INews_Israel': 'Новости Израиля«НИ»',
     'EzraMorYoutubeShow': 'Эзра Мор',
     'voiceofisrael': 'Голос Израиля',
-    'GLOBAL_Telegram_MOKED': 'MOKED',
+    'voinasordoy': 'Война с Ордой',
+    'isr_live': 'ИЗРАИЛЬ 🇮🇱 LIVE',
+    'israel_truexa': 'Israel⚡️Труха',
+    'Godunov2020': 'Борис и Лора',
+    'western_wall': 'Стена Плача',
+    'Trueisrael': 'Израильские трудовыебудни',
+    'polet_israel': 'Полет Израиль',
+    'cozy_shekel': 'Уютный шекель',
+    'GLOBAL_Telegram_MOKED': 'GLOBAL_Telegram',
     'abualiexpress': 'Abu Ali',
+    'yosephhaddad': 'Yoseph Haddad',
 }
 
 # ── helpers ──────────────────────────────────────────────────────────
