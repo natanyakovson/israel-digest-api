@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Scrape 7 public Telegram channels for posts since a given timestamp.
-Includes built-in keyword-based deduplication (no LLM needed).
+Scrape public Telegram channels for posts since a given timestamp.
+Includes built-in keyword-based deduplication.
 Usage: python3 scrape_telegram.py [--since ISO_TIMESTAMP]
 Output: JSON to stdout with deduplicated posts.
 """
@@ -26,6 +26,7 @@ CHANNELS_RU = [
     'polet_israel',
     'cozy_shekel',
     'Trueisrael'
+    'crescentscroissants'
 ]
 
 CHANNELS_HE = [
@@ -47,6 +48,7 @@ DISPLAY_NAMES = {
     'israel_truexa': 'Israel⚡️Труха',
     'Godunov2020': 'Борис и Лора',
     'western_wall': 'Стена Плача',
+    'crescentscroissants': 'Война и мир на Ближнем Востоке',
     'Trueisrael': 'Израильские трудовыебудни',
     'polet_israel': 'Полет Израиль',
     'cozy_shekel': 'Уютный шекель',
