@@ -129,8 +129,10 @@ def scrape_channel(channel_name: str, since_dt=None):
 # ── deduplication ────────────────────────────────────────────────────
 def dedup_posts(posts: list, threshold: float = 0.55) -> list:
     """
-    Group posts about the same event by keyword overlap.
-    From each group keep the longest text; attach all source links.
+    Group similar posts from DIFFERENT channels.
+
+    Different posts from the same Telegram channel are never merged.
+    The link of the selected best text is always placed first in all_sources.
     """
     if not posts:
         return []
@@ -142,34 +144,73 @@ def dedup_posts(posts: list, threshold: float = 0.55) -> list:
     for i, (pi, kwi) in enumerate(kw_cache):
         if used[i]:
             continue
+
         group = [i]
         used[i] = True
+        channels_in_group = {pi['channel']}
+
         for j in range(i + 1, len(kw_cache)):
             if used[j]:
                 continue
-            if _similarity(kwi, kw_cache[j][1]) >= threshold:
+
+            pj, kwj = kw_cache[j]
+
+            # Никогда не объединяем разные сообщения одного канала
+            if pj['channel'] in channels_in_group:
+                continue
+
+            if _similarity(kwi, kwj) >= threshold:
                 group.append(j)
                 used[j] = True
+                channels_in_group.add(pj['channel'])
+
         groups.append(group)
 
     deduped = []
+
     for grp in groups:
         items = [kw_cache[idx][0] for idx in grp]
-        # pick the longest text as the "best" version
+
+        # Берём наиболее содержательный текст
         best = max(items, key=lambda p: len(p['text']))
-        # collect all unique source links
-        sources = []
-        seen_links = set()
-        for it in items:
-            if it['link'] not in seen_links:
-                sources.append({'link': it['link'], 'display_name': it['display_name'],
-                                'channel': it['channel'], 'is_hebrew': it['is_hebrew']})
-                seen_links.add(it['link'])
-        best['all_sources'] = sources
-        deduped.append(best)
+
+        # Создаём копию, чтобы не менять исходный объект
+        result = best.copy()
+
+        # Ссылка именно выбранного текста всегда идёт первой
+        sources = [{
+            'link': best['link'],
+            'display_name': best['display_name'],
+            'channel': best['channel'],
+            'is_hebrew': best['is_hebrew'],
+        }]
+
+        seen_links = {best['link']}
+        seen_channels = {best['channel']}
+
+        # Добавляем максимум одну ссылку от каждого другого канала
+        for item in items:
+            if item['link'] in seen_links:
+                continue
+
+            if item['channel'] in seen_channels:
+                continue
+
+            sources.append({
+                'link': item['link'],
+                'display_name': item['display_name'],
+                'channel': item['channel'],
+                'is_hebrew': item['is_hebrew'],
+            })
+
+            seen_links.add(item['link'])
+            seen_channels.add(item['channel'])
+
+        result['all_sources'] = sources
+        deduped.append(result)
 
     return deduped
-
+    
 # ── main ─────────────────────────────────────────────────────────────
 def main():
     parser = argparse.ArgumentParser()
